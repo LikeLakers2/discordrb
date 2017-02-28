@@ -7,8 +7,8 @@ module Discordrb::Events
   class TypingEvent < Event
     include Respondable
 
-    # @return [Channel] the channel on which a user started typing.
-    attr_reader :channel
+    # @!attribute [r] channel
+    #   @return [Channel] the channel on which a user started typing.
 
     # @return [Member] the user that started typing.
     attr_reader :user
