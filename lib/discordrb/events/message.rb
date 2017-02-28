@@ -9,6 +9,10 @@ module Discordrb::Events
     # @return [Channel] the channel in which this event occurred
     attr_reader :channel
 
+    # @!attribute [r] server
+    #   @return [Server, nil] the server where this event occured
+    delegate :server, to: :channel
+
     # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
     # because it avoids rate limiting problems
     # @param content [String] The message to send to the channel
@@ -84,12 +88,10 @@ module Discordrb::Events
     # @!attribute [r] timestamp
     #   @return [Time] the time at which the message was sent.
     #   @see Message#timestamp
-    delegate :author, :channel, :content, :timestamp, to: :message
+    delegate :author, :content, :timestamp, to: :message
 
     # @!attribute [r] server
     #   @return [Server, nil] the server where this message was sent, or nil if it was sent in PM.
-    #   @see Channel#server
-    delegate :server, to: :channel
 
     def initialize(message, bot)
       @bot = bot
