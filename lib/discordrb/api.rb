@@ -205,6 +205,7 @@ module Discordrb::API
   end
 
   # Login to the server
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def login(email, password)
     request(
       :auth_login,
@@ -217,6 +218,7 @@ module Discordrb::API
   end
 
   # Logout from the server
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def logout(token)
     request(
       :auth_logout,
@@ -229,6 +231,7 @@ module Discordrb::API
   end
 
   # Create an OAuth application
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def create_oauth_application(token, name, redirect_uris)
     request(
       :oauth2_applications,
@@ -242,6 +245,7 @@ module Discordrb::API
   end
 
   # Change an OAuth application's properties
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
       :oauth2_applications,
@@ -268,6 +272,7 @@ module Discordrb::API
   # Acknowledge that a message has been received
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def acknowledge_message(token, channel_id, message_id)
     request(
       :channels_cid_messages_mid_ack,
@@ -291,6 +296,7 @@ module Discordrb::API
   end
 
   # Validate a token (this request will fail if the token is invalid)
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def validate_token(token)
     request(
       :auth_login,

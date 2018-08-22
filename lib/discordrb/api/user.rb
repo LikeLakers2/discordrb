@@ -117,6 +117,7 @@ module Discordrb::API::User
   end
 
   # Change user status setting
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def change_status_setting(token, status)
     Discordrb::API.request(
       :users_me_settings,

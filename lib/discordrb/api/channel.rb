@@ -311,6 +311,7 @@ module Discordrb::API::Channel
   end
 
   # Create an empty group channel.
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def create_empty_group(token, bot_user_id)
     Discordrb::API.request(
       :users_uid_channels,
@@ -324,6 +325,7 @@ module Discordrb::API::Channel
   end
 
   # Create a group channel.
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def create_group(token, pm_channel_id, user_id)
     Discordrb::API.request(
       :channels_cid_recipients_uid,

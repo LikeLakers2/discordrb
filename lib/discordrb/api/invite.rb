@@ -29,6 +29,7 @@ module Discordrb::API::Invite
 
   # Join a server using an invite
   # https://discordapp.com/developers/docs/resources/invite#accept-invite
+  # @deprecated Userbots (aka "selfbots") are no longer supported.
   def accept(token, invite_code)
     Discordrb::API.request(
       :invite_code,
