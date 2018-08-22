@@ -3,7 +3,8 @@ module Discordrb::API::Webhook
   module_function
 
   # Get a webhook
-  # https://discordapp.com/developers/docs/resources/webhook#get-webhook
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#get-webhook
   def webhook(token, webhook_id)
     Discordrb::API.request(
       :webhooks_wid,
@@ -15,7 +16,8 @@ module Discordrb::API::Webhook
   end
 
   # Get a webhook via webhook token
-  # https://discordapp.com/developers/docs/resources/webhook#get-webhook-with-token
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#get-webhook-with-token
   def token_webhook(webhook_token, webhook_id)
     Discordrb::API.request(
       :webhooks_wid,
@@ -26,7 +28,8 @@ module Discordrb::API::Webhook
   end
 
   # Update a webhook
-  # https://discordapp.com/developers/docs/resources/webhook#modify-webhook
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#modify-webhook
   def update_webhook(token, webhook_id, data, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
@@ -41,7 +44,8 @@ module Discordrb::API::Webhook
   end
 
   # Update a webhook via webhook token
-  # https://discordapp.com/developers/docs/resources/webhook#modify-webhook-with-token
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#modify-webhook-with-token
   def token_update_webhook(webhook_token, webhook_id, data, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
@@ -55,7 +59,8 @@ module Discordrb::API::Webhook
   end
 
   # Deletes a webhook
-  # https://discordapp.com/developers/docs/resources/webhook#delete-webhook
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#delete-webhook
   def delete_webhook(token, webhook_id, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
@@ -68,7 +73,8 @@ module Discordrb::API::Webhook
   end
 
   # Deletes a webhook via webhook token
-  # https://discordapp.com/developers/docs/resources/webhook#delete-webhook-with-token
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/webhook#delete-webhook-with-token
   def token_delete_webhook(webhook_token, webhook_id, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,

@@ -3,7 +3,8 @@ module Discordrb::API::Invite
   module_function
 
   # Resolve an invite
-  # https://discordapp.com/developers/docs/resources/invite#get-invite
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/invite#get-invite
   def resolve(token, invite_code, counts = true)
     Discordrb::API.request(
       :invite_code,
@@ -15,7 +16,8 @@ module Discordrb::API::Invite
   end
 
   # Delete an invite by code
-  # https://discordapp.com/developers/docs/resources/invite#delete-invite
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/invite#delete-invite
   def delete(token, code, reason = nil)
     Discordrb::API.request(
       :invites_code,
@@ -28,7 +30,7 @@ module Discordrb::API::Invite
   end
 
   # Join a server using an invite
-  # https://discordapp.com/developers/docs/resources/invite#accept-invite
+  # @return [RestClient::Response] the API response
   def accept(token, invite_code)
     Discordrb::API.request(
       :invite_code,

@@ -7,6 +7,8 @@ require 'time'
 require 'discordrb/errors'
 
 # List of methods representing endpoints in Discord's API
+# @see https://github.com/meew0/discordrb/wiki/API-Wrapper
+# @see https://github.com/meew0/discordrb/wiki/Comparison-mapping
 module Discordrb::API
   # The base URL of the Discord REST API.
   APIBASE = 'https://discordapp.com/api/v6'.freeze
@@ -22,6 +24,7 @@ module Discordrb::API
   end
 
   # Sets the API base URL to something.
+  # @param value [String] The new API base url
   def api_base=(value)
     @api_base = value
   end
@@ -37,6 +40,7 @@ module Discordrb::API
   end
 
   # Sets the bot name to something.
+  # @param value [String] The new bot name
   def bot_name=(value)
     @bot_name = value
   end
@@ -49,6 +53,7 @@ module Discordrb::API
   end
 
   # Generate a user agent identifying this requester as discordrb.
+  # @return [String] The user agent
   def user_agent
     # This particular string is required by the Discord devs.
     required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
@@ -64,11 +69,14 @@ module Discordrb::API
   end
 
   # Wait a specified amount of time synchronised with the specified mutex.
+  # @param time [number] The time to wait
+  # @param mutex [Mutex] The mutex
   def sync_wait(time, mutex)
     mutex.synchronize { sleep time }
   end
 
   # Wait for a specified mutex to unlock and do nothing with it afterwards.
+  # @param mutex [Mutex] The mutex
   def mutex_wait(mutex)
     mutex.lock
     mutex.unlock
@@ -77,6 +85,8 @@ module Discordrb::API
   # Performs a RestClient request.
   # @param type [Symbol] The type of HTTP request to use.
   # @param attributes [Array] The attributes for the request.
+  # @return [RestClient::Response] The response
+  # @raise [Discordrb::Errors::NoPermission] If the bot doesn't have the required permissions for the request
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
   rescue RestClient::Forbidden => e
@@ -90,6 +100,13 @@ module Discordrb::API
   end
 
   # Make an API request, including rate limit handling.
+  # @param key [Symbol] A key identifying a route
+  # @param major_parameter [Object] The major parameter
+  # @param type [Symbol] The type of HTTP request to use.
+  # @param attributes [Array] The attributes for the request.
+  # @return [RestClient::Response] The response
+  # @raise [RestClient::Exception] If the RestClient encounters some unexpected error while performing the request
+  # @raise [Discordrb::Errors::NoPermission] If the bot doesn't have the required permissions for the request
   def request(key, major_parameter, type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
@@ -151,6 +168,9 @@ module Discordrb::API
 
   # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
   # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
+  # @param headers [Hash<Symbol => String>] The headers of the
+  # @param mutex [Mutex] The mutex
+  # @param key [Symbol] A key identifying a route
   def handle_preemptive_rl(headers, mutex, key)
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
 
@@ -180,31 +200,50 @@ module Discordrb::API
   end
 
   # Make an icon URL from server and icon IDs
+  # @param server_id [String, Integer] The server ID
+  # @param icon_id [String] The hexadecimal string that makes up the icon's ID
+  # @param format [String] The file format of the icon
+  # @return [String] The URL of the icon
   def icon_url(server_id, icon_id, format = 'webp')
     "#{cdn_url}/icons/#{server_id}/#{icon_id}.#{format}"
   end
 
   # Make an icon URL from application and icon IDs
+  # @param app_id [String, Integer] The application ID
+  # @param icon_id [String] The hexadecimal string that makes up the icon's ID
+  # @param format [String] The file format of the icon
+  # @return [String] The URL of the icon
   def app_icon_url(app_id, icon_id, format = 'webp')
     "#{cdn_url}/app-icons/#{app_id}/#{icon_id}.#{format}"
   end
 
   # Make a widget picture URL from server ID
+  # @param server_id [String, Integer] The server ID
+  # @param style [String] The style of the widget
+  # @return [String] The URL of the icon
   def widget_url(server_id, style = 'shield')
     "#{api_base}/guilds/#{server_id}/widget.png?style=#{style}"
   end
 
   # Make a splash URL from server and splash IDs
+  # @param server_id [String, Integer] The server ID
+  # @param splash_id [String] The hexadecimal string that makes up the splash's ID
+  # @param format [String] The file format of the icon
+  # @return [String] The URL of the icon
   def splash_url(server_id, splash_id, format = 'webp')
     "#{cdn_url}/splashes/#{server_id}/#{splash_id}.#{format}"
   end
 
   # Make an emoji icon URL from emoji ID
+  # @param emoji_id [String, Integer] The emoji ID
+  # @param format [String] The file format of the icon
+  # @return [String] The URL of the icon
   def emoji_icon_url(emoji_id, format = 'webp')
     "#{cdn_url}/emojis/#{emoji_id}.#{format}"
   end
 
   # Login to the server
+  # @return [RestClient::Response] the API response
   def login(email, password)
     request(
       :auth_login,
@@ -217,6 +256,7 @@ module Discordrb::API
   end
 
   # Logout from the server
+  # @return [RestClient::Response] the API response
   def logout(token)
     request(
       :auth_logout,
@@ -229,6 +269,7 @@ module Discordrb::API
   end
 
   # Create an OAuth application
+  # @return [RestClient::Response] the API response
   def create_oauth_application(token, name, redirect_uris)
     request(
       :oauth2_applications,
@@ -242,6 +283,7 @@ module Discordrb::API
   end
 
   # Change an OAuth application's properties
+  # @return [RestClient::Response] the API response
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
       :oauth2_applications,
@@ -255,6 +297,8 @@ module Discordrb::API
   end
 
   # Get the bot's OAuth application's information
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/topics/oauth2#get-current-application-information
   def oauth_application(token)
     request(
       :oauth2_applications_me,
@@ -268,6 +312,7 @@ module Discordrb::API
   # Acknowledge that a message has been received
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
+  # @return [RestClient::Response] the API response
   def acknowledge_message(token, channel_id, message_id)
     request(
       :channels_cid_messages_mid_ack,
@@ -280,6 +325,8 @@ module Discordrb::API
   end
 
   # Get the gateway to be used
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/topics/gateway#get-gateway
   def gateway(token)
     request(
       :gateway,
@@ -291,6 +338,7 @@ module Discordrb::API
   end
 
   # Validate a token (this request will fail if the token is invalid)
+  # @return [RestClient::Response] the API response
   def validate_token(token)
     request(
       :auth_login,
@@ -304,6 +352,8 @@ module Discordrb::API
   end
 
   # Get a list of available voice regions
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/voice#list-voice-regions
   def voice_regions(token)
     request(
       :voice_regions,

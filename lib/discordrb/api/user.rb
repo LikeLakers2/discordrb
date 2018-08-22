@@ -3,7 +3,8 @@ module Discordrb::API::User
   module_function
 
   # Get user data
-  # https://discordapp.com/developers/docs/resources/user#get-user
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#get-user
   def resolve(token, user_id)
     Discordrb::API.request(
       :users_uid,
@@ -15,7 +16,8 @@ module Discordrb::API::User
   end
 
   # Get profile data
-  # https://discordapp.com/developers/docs/resources/user#get-current-user
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#get-current-user
   def profile(token)
     Discordrb::API.request(
       :users_me,
@@ -27,6 +29,8 @@ module Discordrb::API::User
   end
 
   # Change the current bot's nickname on a server
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/guild#modify-current-user-nick
   def change_own_nickname(token, server_id, nick, reason = nil)
     Discordrb::API.request(
       :guilds_sid_members_me_nick,
@@ -41,7 +45,8 @@ module Discordrb::API::User
   end
 
   # Update user data
-  # https://discordapp.com/developers/docs/resources/user#modify-current-user
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#modify-current-user
   def update_profile(token, email, password, new_username, avatar, new_password = nil)
     Discordrb::API.request(
       :users_me,
@@ -55,7 +60,8 @@ module Discordrb::API::User
   end
 
   # Get the servers a user is connected to
-  # https://discordapp.com/developers/docs/resources/user#get-current-user-guilds
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#get-current-user-guilds
   def servers(token)
     Discordrb::API.request(
       :users_me_guilds,
@@ -67,7 +73,8 @@ module Discordrb::API::User
   end
 
   # Leave a server
-  # https://discordapp.com/developers/docs/resources/user#leave-guild
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#leave-guild
   def leave_server(token, server_id)
     Discordrb::API.request(
       :users_me_guilds_sid,
@@ -79,7 +86,9 @@ module Discordrb::API::User
   end
 
   # Get the DMs for the current user
-  # https://discordapp.com/developers/docs/resources/user#get-user-dms
+  # @note For bots, this is no longer a supported method of getting recent DMs, and will return an empty array.
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#get-user-dms
   def user_dms(token)
     Discordrb::API.request(
       :users_me_channels,
@@ -91,7 +100,8 @@ module Discordrb::API::User
   end
 
   # Create a DM to another user
-  # https://discordapp.com/developers/docs/resources/user#create-dm
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#create-dm
   def create_pm(token, recipient_id)
     Discordrb::API.request(
       :users_me_channels,
@@ -105,7 +115,8 @@ module Discordrb::API::User
   end
 
   # Get information about a user's connections
-  # https://discordapp.com/developers/docs/resources/user#get-users-connections
+  # @return [RestClient::Response] the API response
+  # @see https://discordapp.com/developers/docs/resources/user#get-users-connections
   def connections(token)
     Discordrb::API.request(
       :users_me_connections,
@@ -117,6 +128,7 @@ module Discordrb::API::User
   end
 
   # Change user status setting
+  # @return [RestClient::Response] the API response
   def change_status_setting(token, status)
     Discordrb::API.request(
       :users_me_settings,
@@ -130,12 +142,18 @@ module Discordrb::API::User
   end
 
   # Returns one of the "default" discord avatars from the CDN given a discriminator
+  # @param discrim [Integer] The discriminator of the user
+  # @return [String] The url to the default avatar
   def default_avatar(discrim = 0)
     index = discrim.to_i % 5
     "#{Discordrb::API.cdn_url}/embed/avatars/#{index}.png"
   end
 
   # Make an avatar URL from the user and avatar IDs
+  # @param user_id [String, Integer] The user ID
+  # @param avatar_id [String] The hexadecimal string that makes up the avatar's ID
+  # @param format [String] The file format of the avatar
+  # @return [String] The URL of the avatar.
   def avatar_url(user_id, avatar_id, format = nil)
     format ||= if avatar_id.start_with?('a_')
                  'gif'
